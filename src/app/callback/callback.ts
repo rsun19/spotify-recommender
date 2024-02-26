@@ -4,12 +4,11 @@ import { redirect } from 'next/navigation';
 
 const client_id: string = `${process.env.CLIENT_ID}`;
 const client_secret: string = `${process.env.CLIENT_SECRET}`;
-var redirect_uri = 'http://localhost:8888/callback';
+var redirect_uri = 'http://localhost:3000/callback';
 
 export async function getAccessToken(code: string, state: string) {
-    var scope = 'user-read-private user-read-email';
     const url:string  = "https://accounts.spotify.com/api/token";
-    const response_type = 'code';
+    console.log("hello")
     const res = await fetch(url, {
         method: "POST",
         headers: {
