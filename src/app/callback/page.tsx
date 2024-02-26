@@ -1,7 +1,6 @@
 'use client'
 
 import { redirect, useSearchParams } from 'next/navigation'
-import { getAccessToken } from "./callback";
 
 export default function Callback() {
     const searchParams = useSearchParams()
