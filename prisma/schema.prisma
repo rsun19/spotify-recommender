@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Song {
+  id         Int     @id @default(autoincrement())
+  artistName String
+  seconds    Int
+  genre      String
+  category   String
+  sentiment  Int
+  wpm        Float
+  listens    Int
+  artistId   Int?
+  artist     Artist? @relation(fields: [artistId], references: [id])
+}
+
+model Artist {
+  id     Int    @id @default(autoincrement())
+  name   String
+  number Int
+  songs  Song[]
+}
+
+model UserSongs {
+  id      Int    @id @default(autoincrement())
+  title   String
+  artist  String
+  year    String
+  times   Int
+  skipped Int
+  liked   Int
+  rating  Int
+  userId  Int?
+  user    User?  @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id          Int         @id @default(autoincrement())
+  email       String      @unique
+  name        String?
+  accessToken String?
+  photo       String?
+  premium     Boolean
+  listened    UserSongs[]
+}
