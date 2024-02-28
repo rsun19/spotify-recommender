@@ -20,8 +20,10 @@ export const fetchAuthorizationToken = async(url: string, formData: URLSearchPar
             }
         }
     ).then(async data => {
-        if (data && data.access_token) {
-            await getUserProfile(data.access_token);
+        if (data && 
+            data.access_token && 
+            data.refresh_token) {
+            await getUserProfile(data.access_token, data.refresh_token);
             console.log(`ACCESS TOKEN: ${data.access_token}`);
         } else {
             console.error('Access token not found in the response');

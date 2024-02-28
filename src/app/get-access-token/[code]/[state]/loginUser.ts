@@ -7,11 +7,12 @@ import { redirect } from 'next/navigation';
 interface profile {
     name: string,
     email: string,
-    premium: boolean
-    accessToken: string
+    premium: boolean,
+    accessToken: string,
+    refreshToken: string
 }
 
-const getUser = async(email: string) => {
+export const getUser = async(email: string) => {
     const user = await prisma.user.findFirstOrThrow(
         {
             where: {
@@ -22,33 +23,35 @@ const getUser = async(email: string) => {
     return user;
 }
 
-const updateAccessToken = async(email: string, accessToken: string) => {
+export const updateAccessToken = async(email: string, accessToken: string, refreshToken: string) => {
     const user = await prisma.user.update(
         {
             where: {
                 email: email
             },
             data: {
-                accessToken: accessToken
+                accessToken: accessToken,
+                refreshToken: refreshToken
             }
         }
     )
     return user;
 }
 
-const insertUser = async(profile: profile) => {
+export const insertUser = async(profile: profile) => {
     const user = await prisma.user.create({
         data: {
             name: profile.name,
             email: profile.email,
             premium: profile.premium,
-            accessToken: profile.accessToken
+            accessToken: profile.accessToken,
+            refreshToken: profile.refreshToken
         }
     })
     return user;
 }
 
-export const getUserProfile = async(authorizationCode: string) => {
+export const getUserProfile = async(authorizationCode: string, refreshToken: string) => {
     const url = "https://api.spotify.com/v1/me";
     await fetch(url, {
         headers: {
@@ -64,16 +67,20 @@ export const getUserProfile = async(authorizationCode: string) => {
         }
     ).then(
         async profileData => {
-            if (profileData && profileData.display_name && profileData.email && profileData.product) {
+            if (profileData && 
+                profileData.display_name && 
+                profileData.email && 
+                profileData.product) {
                 const profile: profile = {
                     name: profileData.display_name,
                     email: profileData.email,
                     premium: profileData.product == "premium" ? true : false,
-                    accessToken: authorizationCode
+                    accessToken: authorizationCode,
+                    refreshToken: refreshToken
                 }
                 try {
                     await getUser(profileData.email);
-                    await updateAccessToken(profileData.email, authorizationCode);
+                    await updateAccessToken(profileData.email, authorizationCode, profileData.refresh_token);
                 } catch(e) {
                     await insertUser(profile);
                 }

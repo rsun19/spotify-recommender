@@ -41,11 +41,12 @@ model UserSongs {
 }
 
 model User {
-  id          Int         @id @default(autoincrement())
-  email       String      @unique
-  name        String?
-  accessToken String?
-  photo       String?
-  premium     Boolean
-  listened    UserSongs[]
+  id           Int         @id @default(autoincrement())
+  email        String      @unique
+  name         String?
+  accessToken  String?
+  refreshToken String?
+  photo        String?
+  premium      Boolean
+  listened     UserSongs[]
 }
