@@ -1,6 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation';
+import { getUserProfile } from "./loginUser";
 
 const AccessToken = async ({ params }: { params: { code: string, state: string } }) => {
     console.log(params.code);
@@ -28,9 +29,9 @@ const AccessToken = async ({ params }: { params: { code: string, state: string }
                 return res.json();
             }
         }
-    ).then(data => {
+    ).then(async data => {
         if (data && data.access_token) {
-            // Need to store it later.
+            await getUserProfile(data.access_token);
             console.log(data.access_token);
         } else {
             console.error('Access token not found in the response');
