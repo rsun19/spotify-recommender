@@ -9,7 +9,7 @@ datasource db {
 
 model Song {
   id         Int     @id @default(autoincrement())
-  artistName String
+  artistName String[]
   seconds    Int
   genre      String
   category   String
@@ -30,7 +30,7 @@ model Artist {
 model UserSongs {
   id      Int    @id @default(autoincrement())
   title   String
-  artist  String
+  artist  String[]
   year    String
   times   Int
   skipped Int
