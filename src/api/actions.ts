@@ -22,17 +22,10 @@ export function encryptCookieData (data: string): string {
 }
 
 export function decryptCookieData (data: string): string {
-  // Use the async `crypto.scrypt()` instead.
   const key = scryptSync(`${process.env.COOKIE_ENCRYPT_KEY}`, 'salt', 24)
-  // The IV is usually passed along with the ciphertext.
-  const iv = Buffer.alloc(16, 0) // Initialization vector.
-
+  const iv = Buffer.alloc(16, 0)
   const decipher = createDecipheriv(`${process.env.ENCRYPT_ALGORITHM}`, key, iv)
-
-  // Encrypted using same algorithm, key and iv.
-  const encrypted =
-    'e5f79c5915c02171eec6b212d5520d44480993d7d622a7c4c2da32f6efda0ffa'
-  let decrypted: string = decipher.update(encrypted, 'hex', 'utf8')
+  let decrypted: string = decipher.update(data, 'hex', 'utf8')
   decrypted += decipher.final('utf8')
   return decrypted
 }

@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 
-const loginFailure = () => {
-    return (
+const loginFailure = (): React.JSX.Element => {
+  return (
         <div>
             login failed.
         </div>
-    );
+  )
 }
 
-export default loginFailure;
+export default loginFailure

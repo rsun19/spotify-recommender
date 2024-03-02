@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 'use server'
 
 import prisma from '../../../../lib/prisma'
@@ -11,7 +12,17 @@ interface profile {
   refreshToken: string
 }
 
-export const getUser = async (email: string) => {
+interface User {
+  id: number
+  email: string
+  name: string | null
+  accessToken: string | null
+  refreshToken: string | null
+  photo: string | null
+  premium: boolean
+}
+
+export const getUser = async (email: string): Promise<User> => {
   const user = await prisma.user.findFirstOrThrow(
     {
       where: {
@@ -22,7 +33,7 @@ export const getUser = async (email: string) => {
   return user
 }
 
-export const updateAccessToken = async (email: string, accessToken: string, refreshToken: string) => {
+export const updateAccessToken = async (email: string, accessToken: string, refreshToken: string): Promise<User> => {
   const user = await prisma.user.update(
     {
       where: {
@@ -37,7 +48,7 @@ export const updateAccessToken = async (email: string, accessToken: string, refr
   return user
 }
 
-export const insertUser = async (profile: profile) => {
+export const insertUser = async (profile: profile): Promise<User> => {
   const user = await prisma.user.create({
     data: {
       name: profile.name,
@@ -50,7 +61,7 @@ export const insertUser = async (profile: profile) => {
   return user
 }
 
-export const getUserProfile = async (authorizationCode: string, refreshToken: string) => {
+export const getUserProfile = async (authorizationCode: string, refreshToken: string): Promise<void> => {
   const url = 'https://api.spotify.com/v1/me'
   await fetch(url, {
     headers: {
@@ -66,13 +77,13 @@ export const getUserProfile = async (authorizationCode: string, refreshToken: st
     }
   ).then(
     async profileData => {
-      if (profileData?.display_name &&
-                profileData.email &&
-                profileData.product) {
+      if ((Boolean((profileData?.display_name))) &&
+                (Boolean(profileData.email)) &&
+                (Boolean(profileData.product))) {
         const profile: profile = {
           name: profileData.display_name,
           email: profileData.email,
-          premium: profileData.product == 'premium',
+          premium: profileData.product === 'premium',
           accessToken: authorizationCode,
           refreshToken
         }

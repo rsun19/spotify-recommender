@@ -1,12 +1,12 @@
-import React from 'react';
+import React from 'react'
 
 interface PlayerProps {
-    current: Record<string, string>;
-    next: Record<string, string>;
+  current: Record<string, string>
+  next: Record<string, string>
 }
 
-const Player: React.FC<PlayerProps> = ({current, next}) => {
-    return (
+const Player: React.FC<PlayerProps> = ({ current, next }) => {
+  return (
         <div id="progress-bar">
             {/* EDITED FROM FLOWBITE: https://flowbite.com/docs/components/progress/ */}
             <span className="text-base font-medium text-blue-700 mb-1">{current.song}</span>
@@ -22,7 +22,7 @@ const Player: React.FC<PlayerProps> = ({current, next}) => {
                 </div>
             </div>
         </div>
-    );
+  )
 }
 
-export default Player;
+export default Player
