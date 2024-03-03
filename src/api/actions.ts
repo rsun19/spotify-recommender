@@ -40,6 +40,6 @@ export async function handleLogin (userId: number): Promise<void> {
       path: '/'
     })
   } catch (e) {
-    redirect('/login-failure')
+    redirect('/loginfailure')
   }
 }

@@ -23,7 +23,7 @@ const refetchAuthorizationToken = async (email: string, url: string, formData: U
   }).then(
     async res => {
       if (!res.ok) {
-        redirect('/login-failure')
+        redirect('/loginfailure')
       } else {
         return await res.json()
       }
@@ -35,11 +35,11 @@ const refetchAuthorizationToken = async (email: string, url: string, formData: U
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         await updateAccessToken(email, data.access_token, data.refresh_token)
       } catch (e) {
-        redirect('/login-failure')
+        redirect('/loginfailure')
       }
     } else {
       console.error('Access token not found in the response')
-      redirect('/login-failure')
+      redirect('/loginfailure')
     }
   })
 }

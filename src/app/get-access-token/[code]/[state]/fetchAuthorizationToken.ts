@@ -14,7 +14,7 @@ export const fetchAuthorizationToken = async (url: string, formData: URLSearchPa
   }).then(
     async res => {
       if (!res.ok) {
-        redirect('/login-failure')
+        redirect('/loginfailure')
       } else {
         return await res.json()
       }
@@ -24,10 +24,9 @@ export const fetchAuthorizationToken = async (url: string, formData: URLSearchPa
             (Boolean(data.refresh_token))) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await getUserProfile(data.access_token, data.refresh_token)
-      console.log(`ACCESS TOKEN: ${data.access_token}`)
     } else {
       console.error('Access token not found in the response')
-      redirect('/login-failure')
+      redirect('/loginfailure')
     }
   })
 }
