@@ -70,7 +70,7 @@ export const getUserProfile = async (authorizationCode: string, refreshToken: st
   }).then(
     async res => {
       if (!res.ok) {
-        redirect('/login-failure')
+        redirect('/loginfailure')
       } else {
         return await res.json()
       }
