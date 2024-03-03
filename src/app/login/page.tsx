@@ -1,14 +1,27 @@
-'use server'
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
 
-import { redirect } from 'next/navigation';
+const Home: NextPage = () => {
+    return (
+        <div>
+            <Head>
+                <title>Home Page</title>
+                <meta name="description" content="Welcome to our Spotify recommender website" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
 
-const Login = () => {
-    const client_id: string = `${process.env.CLIENT_ID}`;
-    var redirect_uri = 'http://localhost:3000/callback';
-    var scope = 'user-read-private%20user-read-email';
-    const url:string  = "https://accounts.spotify.com/authorize?";
-    const response_type = 'code';
-    redirect(`${url}response_type=${response_type}&client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}`)
-}
+            <main>
+                <h1>Welcome to Spotify Recommender</h1>
+                <p>This is the home page of your application.</p>
+                <p>
+                    <Link href="/login">
+                        <a>Go to Login</a>
+                    </Link>
+                </p>
+            </main>
+        </div>
+    );
+};
 
-export default Login;
+export default Home;

@@ -5,7 +5,8 @@ export default function MainHeader() {
   return (
     <nav className="flex items-center justify-between flex-wrap p-6 text-white bg-black">
       <div className="flex items-center flex-shrink-0">
-        <Link className="font-semibold text-lg" href={"/"}>Better Spotify</Link>
+        <Image src="/Ekko_Logo.png" alt="Ekko Logo" width={30} height={30} />
+        <Link className="font-semibold text-lg" href={"/"}>Ekko</Link>
       </div>
       <div className="flex items-center space-x-4">
         <Link className="font-semibold text-lg" href={"/"}>Player</Link>
