@@ -1,23 +1,22 @@
-import Link from "next/link";
-import MainHeader from "./MainHeader";
-import Player from "./Player";
+import MainHeader from './MainHeader'
+import Player from './Player'
 
 interface Song {
-  song: string;
-  artist: string;
-  progress: string;
+  song: string
+  artist: string
+  progress: string
 }
 
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 interface SongRecord extends Song {
-  [key: string]: string;
+  [key: string]: string
 }
 
-export default function Home() {
-
+export default function Home (): JSX.Element {
   const song: SongRecord = {
-    song: "Hello",
-    artist: "Adele",
-    progress: "45%"
+    song: 'Hello',
+    artist: 'Adele',
+    progress: '45%'
   }
 
   return (
@@ -26,7 +25,7 @@ export default function Home() {
       <div className="mb-5">
         Insert Recommendations here
       </div>
-      <Player current={song} next={{"hello": "hello"}}/>
+      <Player current={song} next={{ hello: 'hello' }}/>
     </main>
-  );
+  )
 }

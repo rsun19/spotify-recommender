@@ -1,83 +1,99 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 'use server'
 
-import { Prisma } from "@prisma/client";
-import prisma from "../../../../lib/prisma";
-import { redirect } from 'next/navigation';
+import prisma from '../../../../lib/prisma'
+import { redirect } from 'next/navigation'
 
 interface profile {
-    name: string,
-    email: string,
-    premium: boolean
-    accessToken: string
+  name: string
+  email: string
+  premium: boolean
+  accessToken: string
+  refreshToken: string
 }
 
-const getUser = async(email: string) => {
-    const user = await prisma.user.findFirstOrThrow(
-        {
-            where: {
-                email: email
-            }
-        }
-    );
-    return user;
+interface User {
+  id: number
+  email: string
+  name: string | null
+  accessToken: string | null
+  refreshToken: string | null
+  photo: string | null
+  premium: boolean
 }
 
-const updateAccessToken = async(email: string, accessToken: string) => {
-    const user = await prisma.user.update(
-        {
-            where: {
-                email: email
-            },
-            data: {
-                accessToken: accessToken
-            }
-        }
-    )
-    return user;
+export const getUser = async (email: string): Promise<User> => {
+  const user = await prisma.user.findFirstOrThrow(
+    {
+      where: {
+        email
+      }
+    }
+  )
+  return user
 }
 
-const insertUser = async(profile: profile) => {
-    const user = await prisma.user.create({
-        data: {
-            name: profile.name,
-            email: profile.email,
-            premium: profile.premium,
-            accessToken: profile.accessToken
-        }
-    })
-    return user;
+export const updateAccessToken = async (email: string, accessToken: string, refreshToken: string): Promise<User> => {
+  const user = await prisma.user.update(
+    {
+      where: {
+        email
+      },
+      data: {
+        accessToken,
+        refreshToken
+      }
+    }
+  )
+  return user
 }
 
-export const getUserProfile = async(authorizationCode: string) => {
-    const url = "https://api.spotify.com/v1/me";
-    await fetch(url, {
-        headers: {
-            "Authorization": `Bearer ${authorizationCode}`
+export const insertUser = async (profile: profile): Promise<User> => {
+  const user = await prisma.user.create({
+    data: {
+      name: profile.name,
+      email: profile.email,
+      premium: profile.premium,
+      accessToken: profile.accessToken,
+      refreshToken: profile.refreshToken
+    }
+  })
+  return user
+}
+
+export const getUserProfile = async (authorizationCode: string, refreshToken: string): Promise<void> => {
+  const url = 'https://api.spotify.com/v1/me'
+  await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${authorizationCode}`
+    }
+  }).then(
+    async res => {
+      if (!res.ok) {
+        redirect('/login-failure')
+      } else {
+        return await res.json()
+      }
+    }
+  ).then(
+    async profileData => {
+      if ((Boolean((profileData?.display_name))) &&
+                (Boolean(profileData.email)) &&
+                (Boolean(profileData.product))) {
+        const profile: profile = {
+          name: profileData.display_name,
+          email: profileData.email,
+          premium: profileData.product === 'premium',
+          accessToken: authorizationCode,
+          refreshToken
         }
-    }).then(
-        res => {
-            if (!res.ok) {
-                redirect("/login-failure");
-            } else {
-                return res.json();
-            }
+        try {
+          await getUser(profileData.email)
+          await updateAccessToken(profileData.email, authorizationCode, profileData.refresh_token)
+        } catch (e) {
+          await insertUser(profile)
         }
-    ).then(
-        async profileData => {
-            if (profileData && profileData.display_name && profileData.email && profileData.product) {
-                const profile: profile = {
-                    name: profileData.display_name,
-                    email: profileData.email,
-                    premium: profileData.product == "premium" ? true : false,
-                    accessToken: authorizationCode
-                }
-                try {
-                    await getUser(profileData.email);
-                    await updateAccessToken(profileData.email, authorizationCode);
-                } catch(e) {
-                    await insertUser(profile);
-                }
-            }
-        }
-    )
+      }
+    }
+  )
 }

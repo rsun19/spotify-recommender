@@ -1,14 +1,14 @@
 'use server'
 
-import { redirect } from 'next/navigation';
+import { redirect } from 'next/navigation'
 
-const Login = () => {
-    const client_id: string = `${process.env.CLIENT_ID}`;
-    var redirect_uri = 'http://localhost:3000/callback';
-    var scope = 'user-read-private%20user-read-email';
-    const url:string  = "https://accounts.spotify.com/authorize?";
-    const response_type = 'code';
-    redirect(`${url}response_type=${response_type}&client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}`)
+const Login = (): void => {
+  const clientId: string = `${process.env.CLIENT_ID}`
+  const redirectUri = 'http://localhost:3000/callback'
+  const scope = 'user-read-private%20user-read-email'
+  const url: string = 'https://accounts.spotify.com/authorize?'
+  const responseType = 'code'
+  redirect(`${url}response_type=${responseType}&client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUri}`)
 }
 
-export default Login;
+export default Login
